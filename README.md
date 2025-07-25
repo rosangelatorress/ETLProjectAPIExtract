@@ -29,6 +29,7 @@ Este projeto é um pipeline ETL (Extract, Transform, Load) desenvolvido em Pytho
     `python main.py`
     
 ## Estrutura do Projeto
+```
 ETLProjectAPIExtract/
 ├── main.py
 ├── etl/
@@ -36,5 +37,5 @@ ETLProjectAPIExtract/
 │   ├── transform.py
 │   └── load.py
 ├── README.md
-
+```
 ## Licença
