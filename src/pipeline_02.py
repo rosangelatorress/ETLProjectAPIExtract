@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 
+# Importar Base e BitcoinPreco do database.py
 from database import Base, BitcoinPreco
 
 # Carrega variáveis de ambiente do arquivo .env
