@@ -1,6 +1,12 @@
 from datetime import datetime 
 
-timestamp = datetime.now().timestamp()
+timestamp = datetime.now().timestamp()         
+
+"""
+No código adicionei esse timestamp() mas deu erro 
+por problema de compatibilidade de dados
+"""
+
 timestamp2 = datetime.now()
 
 

@@ -90,3 +90,5 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"Erro durante a execução: {e}")
             time.sleep(15)
+
+            
