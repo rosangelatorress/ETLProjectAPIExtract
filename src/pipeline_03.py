@@ -48,11 +48,8 @@ def criar_tabela():
 
 
 def extract_dados_bitcoin():
-    """
-    Extrai o JSON completo da API da Coinbase.
-    """
+    # Extrai o JSON completo da API da Coinbase.
     url = "https://api.coinbase.com/v2/prices/spot"
-
     response = requests.get(url)
     if response.status_code == 200:
         return response.json()
@@ -60,13 +57,12 @@ def extract_dados_bitcoin():
         logger.error(f"Erro na API: {response.status_code}")
         return None
 
-# Transformação dos dados
-# A função transforma os dados extraídos em um formato mais simples e legível.
 
-def transform_dados_bitcoin(dados):
-    valor = float(dados["data"]["amount"])
-    criptomoeda = dados["data"]["base"]
-    moeda = dados["data"]["currency"]
+def transform_dados_bitcoin(dados_json):
+    # Transforma os dados extraídos em um formato adequado para o banco de dados
+    valor = float(dados_json["data"]["amount"])
+    criptomoeda = dados_json["data"]["base"]
+    moeda = dados_json["data"]["currency"]
     timestamp = datetime.now()
 
     dados_transformados = {
@@ -78,7 +74,7 @@ def transform_dados_bitcoin(dados):
     return dados_transformados
 
 def salvar_dados_postgres(dados):
-    """Salva os dados no banco de dados PostgreSQL"""
+    # Salva os dados no banco de dados PostgreSQL
     session = Session()
     try:
         novo_registro = BitcoinPreco(**dados)
@@ -91,25 +87,44 @@ def salvar_dados_postgres(dados):
     finally:
         session.close()
 
+def pipeline_bitcoin():
+    # Executa a pipeline de ETL do Bitcoin com spans do Logfire
+    with logfire.span("Executando pipeline ETL Bitcoin"):
 
+        with logfire.span("Extrair Dados da API Coinbase"):
+            dados_json = extract_dados_bitcoin()
+
+        if not dados_json:
+            logger.error("Falha na extração dos dados. Abortanto pipeline.")
+            return
+        
+        with logfire.span("Tratar dados do Bitcoin"):
+            dados_tratados = transform_dados_bitcoin(dados_json)
+
+        with logfire.span("Salvar Dados no PostgreSQL"):
+            salvar_dados_postgres(dados_tratados)
+
+        # Exemplo de log final com placeholders
+        logger.info(
+            f"Pipeline finalizada com sucesso!"
+        )
 
 if __name__ == "__main__":
+    # Cria a tabela no banco de dados
     criar_tabela()
-    print("Iniciando ETL com atualização a cada 15 segundos... (Ctrl+C para parar)")
+    logger.info("Iniciando pipeline ETL com atualização a cada 15 segundos... (CTRL+C para interromper)")
 
     while True:
         try:
-            dados_json = extract_dados_bitcoin()
-            if dados_json:
-                dados_tratados = transform_dados_bitcoin(dados_json)
-                print("Dados Tratados:", dados_tratados)
-                salvar_dados_postgres(dados_tratados)
+            pipeline_bitcoin()
             time.sleep(15)
         except KeyboardInterrupt:
-            print("\nProcesso interrompido pelo usuário. Finalizando...")
+            logger.info("Processo interrompido pelo usuário. Finalizando...")
             break
         except Exception as e:
-            print(f"Erro durante a execução: {e}")
+            logger.error(f"Erro inesperado durante a execução da pipeline: {e}")
             time.sleep(15)
+    
+
 
             
