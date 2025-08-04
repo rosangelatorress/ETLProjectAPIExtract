@@ -6,6 +6,12 @@ Este projeto tem como objetivo demonstrar o ciclo completo de um pipeline de Eng
 
 O pipeline é executado em tempo quase real, com atualização a cada 15 segundos, salvando os dados em um banco PostgreSQL e disponibilizando-os em um dashboard feito com Streamlit.
 
+## Arquitetura da Solução
+
+Este projeto segue o seguinte fluxo de dados:
+
+![Arquitetura do Projeto](./image/arquitetura%20do%20projeto.png)
+
 ## Funcionalidades
 
 * Extração de dados da API da Coinbase
@@ -115,6 +121,25 @@ streamlit run app/dashboard_01.py
 
   * Gráfico de linha do preço do Bitcoin
   * Métricas: valor atual, máximo e mínimo
+
+  ### Dados no Banco (PostgreSQL)
+
+A tabela no PostgreSQL é atualizada com registros do preço do Bitcoin a cada 15 segundos.
+
+  ![Dados no PostgreSQL](./image/postgresql.png)
+
+  ### Dashboard Interativo
+
+  Gráfico de linha do preço do Bitcoin em tempo real, com métricas de valor atual, máximo e mínimo.
+
+  ![Dashboard com dados extraídos](./image/dashboard.png)
+
+  ### Logs da Pipeline
+
+  A pipeline é executada diretamente via terminal.
+
+  ![Logs da execução da pipeline](./image/logs.png)
+
 
 ## 🎓 Aprendizados
 
