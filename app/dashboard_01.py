@@ -37,7 +37,7 @@ def ler_dados_postgres():
 def main():
     st.set_page_config(page_title="Dashboard Bitcoin", layout="wide")
     st.title("📊 Dashboard de Preços do Bitcoin")
-    st.write("Este dashboard exibe os dados do proço do Bitcoin coletados periodicamente em um banco PostgreSQL.")
+    st.write("Este dashboard exibe os dados do preço do Bitcoin coletados periodicamente em um banco PostgreSQL.")
 
     df = ler_dados_postgres()
 
